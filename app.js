@@ -1282,7 +1282,7 @@ var info_str = 'OVERVIEW: \n' +
               'ADDITIONAL NOTES: \n' +
               'The official Rangeland Assessment Platform website is found at https://rangelands.app \n' + 
               'The PRISM dataset used is available from https://support.climateengine.org/article/80-prism \n' +
-              'The code for this application can be found at www.github.com/ARS-SWRC/RAP-Clim-Sens-Viewer'
+              'The code for this application can be found at www.github.com/ARS-SWRC/RAP-Clim-Sens-Viewer \n' +
               'This app is developed by Andrew Fullhart and Gerardo Armendariz (U of Arizona SNRE, USDA-ARS-SWRC).';
 
 var text_box = ui.Label({value:info_str, style:infoLabelStyle});
