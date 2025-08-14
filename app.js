@@ -14,7 +14,7 @@ function make_date_fn(year_num){
 }
 var dates_list = ee.List(years_list.map(make_date_fn));
 var years_str_list = ['1986', '1987', '1988', '1989', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'];
-var cover_bands = ['AFG', 'BGR', 'LTR', 'PFG', 'SHR', 'TRE'];
+var cover_bands = ['AFG', 'PFG', 'SHR', 'TRE', 'LTR', 'BGR'];
 var prod_bands = ['afgNPP', 'pfgNPP', 'shrNPP', 'treNPP'];
 var bio_bands = ['afgAGB', 'pfgAGB'];
 var cover_ic = ee.ImageCollection('projects/rap-data-365417/assets/vegetation-cover-v3');
@@ -24,6 +24,10 @@ var metric_strs = ['avg', 'sdev', 'rmse', 'rsqr', 'rsqrA', 'Fconf', 'Tconf'];
 var model_list = ['A1*pr + A2*tx + A3*tn + A4*td + A5*vx + A6*vn + K1', 'B1*pr + B2*tm + K2', 'C1*pr + K3'];
 var coeff_list = ['Atrend', 'Ktrend', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'B1', 'B2', 'C1', 'K1', 'K2', 'K3'];
 var coeff_internal_list = ['c2', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c2', 'c3', 'c2', 'c1', 'c1', 'c1'];
+
+var cover_labels = ['Annual Forbs and Grass',  'Perennial Forbs and Grass', 'Shurbs', 'Trees', 'Litter', 'Bare Ground'];
+var prod_labels = ['Annual Forbs and Grass NPP', 'Perennial Forbs and Grass NPP', 'Shrubs NPP', 'Trees NPP'];
+var bio_labels = ['Annual Forbs and Grass AGB', 'Perrenial Forbs and Grass AGB'];
 
 ////////////////////////////
 //Global main function args
@@ -622,6 +626,7 @@ var main_panel = ui.Panel({
   style:mainPanelStyle
 });
 
+main_panel.add(ui.Label({value:'Southwestern U.S.', style:{padding:'0px 0px', fontWeight:'bold'}}));
 main_panel.add(ui.Label({value:'RAP Climate Sensitivity Viewer', style:{padding:'0px 0px', fontWeight:'bold'}}));
 
 var legend_panel = ui.Panel({
@@ -765,6 +770,8 @@ main_panel.add(model_dropdown);
 
 function renderVariable(var_selection){
   Map.layers().reset();
+  var var_i = cover_labels.concat(prod_labels).concat(bio_labels).indexOf(var_selection);
+  var var_selection = cover_bands.concat(prod_bands).concat(bio_bands)[var_i];
   band_selection = var_selection;
   if (cover_bands.indexOf(band_selection) >= 0){
     ic_selection = cover_ic;
@@ -851,7 +858,8 @@ function renderVariable(var_selection){
 }
 
 var variable_dropdown = ui.Select({
-  items:cover_bands.concat(prod_bands).concat(bio_bands), 
+  //items:cover_bands.concat(prod_bands).concat(bio_bands), 
+  items:cover_labels.concat(prod_labels).concat(bio_labels), 
   placeholder:'Select Variable', 
   onChange:renderVariable,
   style:widgetStyle
