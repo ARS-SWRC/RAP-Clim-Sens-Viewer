@@ -1281,7 +1281,6 @@ var info_strD =
               'version of the graph in a separate browser tab. Trends in RAP can be visualized by viewing coefficient  \n' + 
               'maps of Atrend and Ktrend (the slope and intercept, respectively) of the LR trend of annual RAP time series.  \n'
 
-
 var info_strE = 
               'Daly, C., Halbleib, M., Smith, J. I., Gibson, W. P., Doggett, M. K., Taylor, G. H., ... & \n' + 
               'Pasteris, P. P. (2008). Physiographically sensitive mapping of climatological temperature and precipitation \n' +
