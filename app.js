@@ -1,3 +1,5 @@
+//TO DO:
+//How to get rid of unused UI tools that automatically appear (e.g. polygon drawer)?
 
 var prism_ic = ee.ImageCollection('projects/sat-io/open-datasets/OREGONSTATE/PRISM_800_MONTHLY');
 var first_im = prism_ic.first().select('ppt');
