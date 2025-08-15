@@ -543,9 +543,17 @@ var pixelPanelStyle = {
   position:'bottom-center',
   margin:'10px 10px'};
 
+var hdrLabelStyle = {
+  position:'bottom-center',
+  whiteSpace:'preserve nowrap',
+  padding:'0px 0px',
+  margin:'2px',
+  textAlign:'left',
+  fontSize:'12px',
+  fontWeight:'bold'
+};
+
 var infoLabelStyle = {
-  height:'1400px',
-  width:'1000px',
   position:'bottom-center',
   whiteSpace:'preserve nowrap',
   padding:'1px',
@@ -1204,7 +1212,7 @@ main_panel.add(inspect_checkbox);
 //////////////////
 //Render info box
 
-var info_str = 'OVERVIEW: \n' +
+var info_strA =
               'This app is built using the Google Earth Engine cloud platform and publically available datasets. \n' +
               'The Rangeland Assessment Platform (RAP) dataset of ground cover is visualized for a southwestern US  \n' +
               'coverage area, and connections are identified between RAP and climate variables of the PRISM dataset. \n' +
@@ -1214,9 +1222,9 @@ var info_str = 'OVERVIEW: \n' +
               'Each pixel is fitted with its own independent regression model. Trend analysis based on simple linear \n' +
               'regression of RAP annual time series can also be visualized for each pixel. This application is meant \n' +
               'to supplement features available on the offical RAP website and to additionally explore climate \n' +
-              'sensitivity on rangeland in the southwestern US. \n' +
-              '\n' +
-              'DEFINITIONS: \n' +
+              'sensitivity on rangeland in the southwestern US. \n'
+
+var info_strB = 
               'RAP: Rangeland Assessment Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
               'PRISM: A US gridded observational climate dataset. In this case, monthly ~800 m data is annually averaged. \n' +               
               'Ground Cover: The fraction of surface area covered by plants or other cover forms when viewed from above. \n' +
@@ -1245,9 +1253,9 @@ var info_str = 'OVERVIEW: \n' +
               'Selecting the Fconf metric shows the p-value expressed as a confidence percentage. \n' +
               'T-statistic: A metric used to calculate the p-value for the slope coefficient of simple LR trends for \n' +
               'annual RAP time series. Selecting the Tconf metric shows the p-value expressed as a confidence percentage. \n' +
-              'In this case, the confidence represents the likelihood that the slope is non-zero (two-tailed). \n' +
-              '\n' + 
-              'METHODOLOGY: \n' +
+              'In this case, the confidence represents the likelihood that the slope is non-zero (two-tailed). \n'
+
+var info_strC = 
               'Models based on LR are fitted to predict individual RAP variables using the 39-year annual record \n' + 
               'given by RAP (1986-2024) and annually averaged PRISM variables for the same time period. \n' + 
               'Seven PRISM predictor variables were used: precipitation (pr), mean max/min temperature (tx, tn), \n' + 
@@ -1260,9 +1268,9 @@ var info_str = 'OVERVIEW: \n' +
               'the climate regression models and are based on the F-statistic, which indicates whether the overall \n' +
               'LR model is statistically significant. The Tconf map is determined for the trend analysis LR model \n' +
               'and indicates whether the slope cofficient of the LR is statistically significant. Estimated AGB \n' +
-              'for grass and forbs uses the same methodology as the RAP website. \n' +
-              '\n' + 
-              'USAGE: \n' +
+              'for grass and forbs uses the same methodology as the RAP website. \n'
+
+var info_strD = 
               'Choosing any selection option will render a new map. For options that are not chosen, placeholder options \n' + 
               'are used until a selection is made. Rendered maps of metrics, coeffiecents, RAP years, and predicted \n' + 
               'RAP years depend on the selection of climate regression model and/or RAP variable. If you are unsure \n' + 
@@ -1271,9 +1279,10 @@ var info_str = 'OVERVIEW: \n' +
               'adjusted using the slider bar feature in the layer list (top-right). Rendered graphs can be expanded \n' + 
               'to a larger size by clicking the icon in the top-right corner of the graph. This opens an interactive \n' + 
               'version of the graph in a separate browser tab. Trends in RAP can be visualized by viewing coefficient  \n' + 
-              'maps of Atrend and Ktrend (the slope and intercept, respectively) of the LR trend of annual RAP time series.  \n' + 
-              '\n' + 
-              'CITATIONS: \n' +
+              'maps of Atrend and Ktrend (the slope and intercept, respectively) of the LR trend of annual RAP time series.  \n'
+
+
+var info_strE = 
               'Daly, C., Halbleib, M., Smith, J. I., Gibson, W. P., Doggett, M. K., Taylor, G. H., ... & \n' + 
               'Pasteris, P. P. (2008). Physiographically sensitive mapping of climatological temperature and precipitation \n' +
               'across the conterminous United States. International Journal of Climatology: a Journal of the \n' + 
@@ -1285,20 +1294,44 @@ var info_str = 'OVERVIEW: \n' +
               '\n' + 
               'Kleinhesselink, A. R., Kachergis, E. J., McCord, S. E., Shirley, J., Hupp, N. R., Walker, J., ... & \n' + 
               'Naugle, D. E. (2023). Long-term trends in vegetation on Bureau of Land Management rangelands in the \n' + 
-              'western United States. Rangeland Ecology & Management, 87, 1-12. \n' + 
-              '\n' + 
-              'ADDITIONAL NOTES: \n' +
+              'western United States. Rangeland Ecology & Management, 87, 1-12. \n'
+
+var info_strF = 
               'The official Rangeland Assessment Platform website is found at https://rangelands.app \n' + 
               'The PRISM dataset used is available from https://support.climateengine.org/article/80-prism \n' +
               'The code for this application can be found at www.github.com/ARS-SWRC/RAP-Clim-Sens-Viewer \n' +
               'This app is developed by Andrew Fullhart and Gerardo Armendariz (U of Arizona SNRE, USDA-ARS-SWRC).';
 
-var text_box = ui.Label({value:info_str, style:infoLabelStyle});
+
+var hdrA = ui.Label({value:'OVERVIEW', style:hdrLabelStyle});
+var txtA = ui.Label({value:info_strA, style:infoLabelStyle});
+var hdrB = ui.Label({value:'DEFINITIONS', style:hdrLabelStyle});
+var txtB = ui.Label({value:info_strB, style:infoLabelStyle});
+var hdrC = ui.Label({value:'METHODOLOGY', style:hdrLabelStyle});
+var txtC = ui.Label({value:info_strC, style:infoLabelStyle});
+var hdrD = ui.Label({value:'USAGE', style:hdrLabelStyle});
+var txtD = ui.Label({value:info_strD, style:infoLabelStyle});
+var hdrE = ui.Label({value:'CITATIONS', style:hdrLabelStyle});
+var txtE = ui.Label({value:info_strE, style:infoLabelStyle});
+var hdrF = ui.Label({value:'ADDITIONAL NOTES', style:hdrLabelStyle});
+var txtF = ui.Label({value:info_strF, style:infoLabelStyle});
+
 var text_panel = ui.Panel({widgets:null, layout:null, style:textPanelStyle});
 
 function render_infobox(bool_obj){
   if (bool_obj === true){
-    text_panel.add(text_box);
+    text_panel.add(hdrA);
+    text_panel.add(txtA);
+    text_panel.add(hdrB);
+    text_panel.add(txtB);
+    text_panel.add(hdrC);
+    text_panel.add(txtC);
+    text_panel.add(hdrD);
+    text_panel.add(txtD);
+    text_panel.add(hdrE);
+    text_panel.add(txtE);
+    text_panel.add(hdrF);
+    text_panel.add(txtF);
     Map.add(text_panel);
   }else{
     Map.remove(text_panel);
@@ -1318,3 +1351,5 @@ ui.root.add(main_panel);
 
 //Transparent panels only works with Map.add?
 //Map.add(main_panel);
+
+
