@@ -1,6 +1,7 @@
+
 //TO DO:
 //How to get rid of unused UI tools that automatically appear (e.g. polygon drawer)?
-
+//check odd results for sdevtreNPP
 var prism_ic = ee.ImageCollection('projects/sat-io/open-datasets/OREGONSTATE/PRISM_800_MONTHLY');
 var first_im = prism_ic.first().select('ppt');
 var scale = first_im.projection().nominalScale().getInfo();
@@ -31,12 +32,12 @@ var cover_labels = ['Annual Forbs and Grass',  'Perennial Forbs and Grass', 'Shu
 var prod_labels = ['Annual Forbs and Grass NPP', 'Perennial Forbs and Grass NPP', 'Shrubs NPP', 'Trees NPP'];
 var bio_labels = ['Annual Forbs and Grass AGB', 'Perrenial Forbs and Grass AGB'];
 
-////////////////////////////
-//Global main function args
+//////////////////////////////////////////
+//main function args are globally updated
 var band_selection = 'PFG';
 var ic_selection = cover_ic;
-var type_selection = 'cov2000';
-////////////////////////////
+var type_selection = 'avg';
+//////////////////////////////////////////
 
 var model_selection = model_list[0];
 var n = years_list.size();
@@ -387,6 +388,7 @@ function main_fn(band, rap_ic, out_im_type){
   }
 }
 
+
 ////////////////////////////////////////////////////
 //START DeBugGing TEsTING deBUggiNg tESTiNG TEsTiNG
 //var t_im = main_fn('PFG', cover_ic, 'Debug');
@@ -444,7 +446,7 @@ function main_fn(band, rap_ic, out_im_type){
 ///////////////////////
 
 
-//////////////////////
+/////////
 //Styles
 
 //https://github.com/gee-community/ee-palettes
@@ -512,6 +514,13 @@ var checkStyle = {
   backgroundColor:'rgba(255, 255, 255, 0.7)',
   fontSize:'12px'};
 
+var introcheckStyle = {
+  position:'bottom-center',
+  padding:'0px 0px',
+  backgroundColor:'rgba(255, 255, 255, 0.7)',
+  fontSize:'16px',
+  fontWeight:'bold'};
+
 var mainPanelStyle = {
   position:'top-right',
   padding:'0px 0px', 
@@ -555,6 +564,16 @@ var hdrLabelStyle = {
   fontWeight:'bold'
 };
 
+var introhdrLabelStyle = {
+  position:'bottom-center',
+  whiteSpace:'preserve nowrap',
+  padding:'0px 0px',
+  margin:'2px',
+  textAlign:'left',
+  fontSize:'16px',
+  fontWeight:'bold'
+};
+
 var infoLabelStyle = {
   position:'bottom-center',
   whiteSpace:'preserve nowrap',
@@ -563,10 +582,25 @@ var infoLabelStyle = {
   textAlign:'left',
   fontSize:'12px'};
 
+var introLabelStyle = {
+  position:'bottom-center',
+  whiteSpace:'preserve nowrap',
+  padding:'1px',
+  margin:'2px',
+  textAlign:'left',
+  fontSize:'14px'};
+
 var textPanelStyle = {
   height:'500px',
   width:'700px',
   position:'bottom-center', 
+  stretch:'vertical',
+  margin:'10px 10px'};
+
+var introPanelStyle = {
+  height:'300px',
+  width:'650px',
+  position:'top-center', 
   stretch:'vertical',
   margin:'10px 10px'};
 
@@ -626,10 +660,10 @@ biocoeff_map[coeff_list[13]] = {min:-1000, max:1000};
 
 Map.setCenter(-109, 37, 5);
 
-var palettes = require('users/gena/packages:palettes');
-var im_to_show = main_fn(band_selection, ic_selection, type_selection);
+Map.addLayer(area_shp);
+
+var im_to_show = null;
 var bandVis = covVis;
-Map.addLayer(im_to_show, bandVis);
 
 var main_panel = ui.Panel({
   layout:ui.Panel.Layout.flow('vertical'),
@@ -639,6 +673,11 @@ var main_panel = ui.Panel({
 main_panel.add(ui.Label({value:'Southwestern U.S.', style:{padding:'0px 0px', fontWeight:'bold'}}));
 main_panel.add(ui.Label({value:'RAP Climate Sensitivity Viewer', style:{padding:'0px 0px', fontWeight:'bold'}}));
 
+var intro_panel = ui.Panel({
+  layout:ui.Panel.Layout.flow('vertical'),
+  style:mainPanelStyle
+});
+
 var legend_panel = ui.Panel({
   style:{position:'bottom-left', padding:'8px 15px'}
 });
@@ -647,7 +686,7 @@ var chart_panelA = ui.Panel({style:chartPanelStyle});
 var chart_panelB = ui.Panel({style:chartPanelStyle});
 var pixel_panel = ui.Panel({style:pixelPanelStyle});
 
-/////////////////
+//////////////////
 //Legend function
 
 function makeLegend(){
@@ -672,7 +711,7 @@ function makeLegend(){
   }else if ((type_selection.slice(0, 3) == 'agb') || (type_selection.slice(0, 3) == 'avg' && bio_bands.indexOf(band_selection) >= 0) || (type_selection == 'rmse' && bio_bands.indexOf(band_selection) >= 0)){
     var lTitle = 'lbs/acre';
   }else if (type_selection.slice(0, 3) == 'sde'){
-    var lTitle = '% of Avg.';
+    var lTitle = '% of avg.';
   }else if (type_selection == 'rsqr'){
     var lTitle = 'R²';
   }else if (type_selection == 'rsqrA'){
@@ -755,28 +794,7 @@ function makeLegend(){
 }
 
 //////////////////////
-//Change Climate Model
-
-function renderModel(model_string){
-  Map.layers().reset();
-  model_selection = model_string;
-  im_to_show = main_fn(band_selection, ic_selection, type_selection);
-  Map.addLayer(im_to_show, bandVis);
-  makeLegend();
-}
-
-var model_dropdown = ui.Select({
-  items:model_list, 
-  placeholder:'Select Climate Regression Model', 
-  onChange:renderModel,
-  style:widgetStyle
-});
-
-main_panel.add(ui.Label({value:'Select Climate Regression Model', style:headerStyle}))
-main_panel.add(model_dropdown);
-
-/////////////////////
-//Change RAP Variable
+//Select RAP Variable
 
 function renderVariable(var_selection){
   Map.layers().reset();
@@ -868,7 +886,6 @@ function renderVariable(var_selection){
 }
 
 var variable_dropdown = ui.Select({
-  //items:cover_bands.concat(prod_bands).concat(bio_bands), 
   items:cover_labels.concat(prod_labels).concat(bio_labels), 
   placeholder:'Select Variable', 
   onChange:renderVariable,
@@ -878,8 +895,29 @@ var variable_dropdown = ui.Select({
 main_panel.add(ui.Label({value:'Selected RAP Variable', style:headerStyle}))
 main_panel.add(variable_dropdown);
 
-/////////////////////
-//Change Metric Layer
+///////////////////////
+//Select Climate Model
+
+function renderModel(model_string){
+  Map.layers().reset();
+  model_selection = model_string;
+  im_to_show = main_fn(band_selection, ic_selection, type_selection);
+  Map.addLayer(im_to_show, bandVis);
+  makeLegend();
+}
+
+var model_dropdown = ui.Select({
+  items:model_list, 
+  placeholder:'Select Climate Regression Model', 
+  onChange:renderModel,
+  style:widgetStyle
+});
+
+main_panel.add(ui.Label({value:'Select Climate Regression Model', style:headerStyle}))
+main_panel.add(model_dropdown);
+
+//////////////////////
+//Select Metric Layer
 
 function renderMetric(metric_selection){
   Map.layers().reset();
@@ -928,7 +966,7 @@ main_panel.add(ui.Label({value:'View Metric Map', style:headerStyle}))
 main_panel.add(metric_dropdown);
 
 ///////////////////////////
-//Render Coefficient Layer
+//Select Coefficient Layer
 
 function renderCoeff(coeff_str){
   Map.layers().reset();
@@ -965,7 +1003,7 @@ main_panel.add(ui.Label({value:'View Regression Coefficient Map', style:headerSt
 main_panel.add(coeff_dropdown);
 
 ///////////////////
-//Render RAP Layer
+//Select RAP Layer
 
 function renderYearA(year_selection){
   Map.layers().reset();
@@ -999,7 +1037,7 @@ main_panel.add(ui.Label({value:'View RAP year', style:headerStyle}));
 main_panel.add(year_dropdownA);
 
 /////////////////////////
-//Render Predicted Layer
+//Select Predicted Layer
 
 function renderYearB(year_selection){
   Map.layers().reset();
@@ -1350,7 +1388,47 @@ main_panel.add(info_checkbox);
 
 ui.root.add(main_panel);
 
-//Transparent panels only works with Map.add?
+//Transparent panel styles only work with Map.add
+//Scroll bars only work with ui.root.add(main_panel);
 //Map.add(main_panel);
 
+///////////////////
+//Render intro box
 
+var intro_strA = 
+              'Explore site-specific connections between annual records of climate and vegetation cover \n' + 
+              'given by two datasets: PRISM (Parameter-elevation Regressions on Independent Slopes Model) \n' +
+              'and RAP (Rangeland Assessment Platform). Map layers produced at ~800 m resolution \n' +
+              'include statistical model results for each individual RAP variable and grid cell. \n' +
+               '\n' +
+              'Main features: \n' + 
+              '• Visualize site-specific outputs at ~800 m resolution. \n' + 
+              '• Fit multiple linear regressions that predict RAP variables using PRISM variables. \n' + 
+              '• Analyze the sensitivity of RAP to climate based on regression significance and accuracy. \n' + 
+              '• Fit linear regressions of annual vegetation time series for trend analysis. \n' + 
+              '\n' +
+              'See the ReadMe for more information.';
+              
+var hdA = ui.Label({value:'Southwestern US RAP Climate Sensitivity Viewer', style:introhdrLabelStyle});
+var txA = ui.Label({value:intro_strA, style:introLabelStyle});
+
+var intro_panel = ui.Panel({widgets:null, layout:null, style:introPanelStyle});
+intro_panel.add(hdA);
+intro_panel.add(txA);
+
+function render_introbox(bool_obj){
+  if (bool_obj === true){
+    Map.remove(intro_panel);
+    intro_panel.clear();
+  }
+}
+
+var intro_checkbox = ui.Checkbox({
+  label:'CLICK TO CLOSE',
+  onChange:render_introbox,
+  style:introcheckStyle
+});
+
+intro_panel.add(intro_checkbox);
+
+Map.add(intro_panel);
