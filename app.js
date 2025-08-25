@@ -1,7 +1,7 @@
 
 //TO DO:
 //How to get rid of unused UI tools that automatically appear (e.g. polygon drawer)?
-//check odd results for sdevtreNPP
+
 var prism_ic = ee.ImageCollection('projects/sat-io/open-datasets/OREGONSTATE/PRISM_800_MONTHLY');
 var first_im = prism_ic.first().select('ppt');
 var scale = first_im.projection().nominalScale().getInfo();
@@ -595,14 +595,17 @@ var textPanelStyle = {
   width:'700px',
   position:'bottom-center', 
   stretch:'vertical',
-  margin:'10px 10px'};
+  margin:'10px 10px',
+  border:'1px solid black'};
 
 var introPanelStyle = {
   height:'300px',
   width:'650px',
   position:'top-center', 
   stretch:'vertical',
-  margin:'10px 10px'};
+  margin:'10px 10px',
+  border:'1px solid black'
+};
 
 var covcoeff_map = {};
 
@@ -1398,8 +1401,8 @@ ui.root.add(main_panel);
 var intro_strA = 
               'Explore site-specific connections between annual records of climate and vegetation cover \n' + 
               'given by two datasets: PRISM (Parameter-elevation Regressions on Independent Slopes Model) \n' +
-              'and RAP (Rangeland Assessment Platform). Map layers produced at ~800 m resolution \n' +
-              'include statistical model results for each individual RAP variable and grid cell. \n' +
+              'and RAP (Rangeland Assessment Platform). Map layers are produced at ~800 m resolution \n' +
+              'and include statistical model results for each separate RAP variable and grid cell. \n' +
                '\n' +
               'Main features: \n' + 
               '• Visualize site-specific outputs at ~800 m resolution. \n' + 
