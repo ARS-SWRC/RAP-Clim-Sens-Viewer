@@ -1268,33 +1268,33 @@ var info_strA =
               'sensitivity on rangeland in the southwestern US. \n'
 
 var info_strB = 
-              'RAP: Rangeland Assessment Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
-              'PRISM: A US gridded observational climate dataset. In this case, monthly ~800 m data is annually averaged. \n' +               
-              'Ground Cover: The fraction of surface area covered by plants or other cover forms when viewed from above. \n' +
-              'NPP: Net primary production, units of pounds carbon per acre (lbs / acre). \n' + 
-              'AGB: Above ground biomass, units of pounds biomass per acre (lbs / acre). \n' + 
-              'AFG: Annual forbs and grass ground cover (Frac. %). \n' + 
-              'PFG: Perennial forbs and grass ground cover (Frac. %). \n' +
-              'BRG: Bare ground cover (Frac. %).\n' +
-              'SHR: Shurb ground cover (Frac. %). \n' +               
-              'TRE: Tree ground cover (Frac. %). \n' +
-              'afgNPP: NPP of annual forbs and grass (lbs/acre). \n' + 
-              'pfgNPP: NPP of perennial forbs and grass (lbs/acre). \n' +
-              'shrNPP: NPP of shrubs (lbs/acre). \n' +               
-              'treNPP: NPP of trees (lbs/acre). \n' +
-              'afgAGB: AGB of annual forbs and grass estimated from NPP (lbs/acre). \n' + 
-              'pfgAGB: AGB of perennial forbs and grass estimated from NPP (lbs/acre). \n' +
-              'LR: linear regression is a statistical model of the relationship between a dependent variable and one \n' + 
+              '• RAP: Rangeland Assessment Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
+              '• PRISM: A US gridded observational climate dataset. In this case, monthly ~800 m data is annually averaged. \n' +               
+              '• Ground Cover: The fraction of surface area covered by plants or other cover forms when viewed from above. \n' +
+              '• NPP: Net primary production, units of pounds carbon per acre (lbs / acre). \n' + 
+              '• AGB: Above ground biomass, units of pounds biomass per acre (lbs / acre). \n' + 
+              '• AFG: Annual forbs and grass ground cover (Frac. %). \n' + 
+              '• PFG: Perennial forbs and grass ground cover (Frac. %). \n' +
+              '• BRG: Bare ground cover (Frac. %).\n' +
+              '• SHR: Shurb ground cover (Frac. %). \n' +               
+              '• TRE: Tree ground cover (Frac. %). \n' +
+              '• afgNPP: NPP of annual forbs and grass (lbs/acre). \n' + 
+              '• pfgNPP: NPP of perennial forbs and grass (lbs/acre). \n' +
+              '• shrNPP: NPP of shrubs (lbs/acre). \n' +               
+              '• treNPP: NPP of trees (lbs/acre). \n' +
+              '• afgAGB: AGB of annual forbs and grass estimated from NPP (lbs/acre). \n' + 
+              '• pfgAGB: AGB of perennial forbs and grass estimated from NPP (lbs/acre). \n' +
+              '• LR: linear regression is a statistical model of the relationship between a dependent variable and one \n' + 
               'or more independent variables. \n' + 
-              'avg: Average value of the selected RAP variable. \n' +
-              'sdev: Standard deviation of the selected RAP variable. Expressed as a percentage fraction of the avg. \n' + 
-              'RMSE: Root mean square error of the selected climate regression model. \n' + 
-              'Rsqr: R-square of the selected climate regression model. \n' + 
-              'RsqrA: Adjusted R-square of the selected climate regression model that penalizes the model for having \n' + 
+              '• avg: Average value of the selected RAP variable. \n' +
+              '• sdev: Standard deviation of the selected RAP variable. Expressed as a percentage fraction of the avg. \n' + 
+              '• RMSE: Root mean square error of the selected climate regression model. \n' + 
+              '• Rsqr: R-square of the selected climate regression model. \n' + 
+              '• RsqrA: Adjusted R-square of the selected climate regression model that penalizes the model for having \n' + 
               'added parameters. \n' + 
-              'F-statistic: A metric used to calculate the p-value for overall significance of climate LR models. \n' +
+              '• F-statistic: A metric used to calculate the p-value for overall significance of climate LR models. \n' +
               'Selecting the Fconf metric shows the p-value expressed as a confidence percentage. \n' +
-              'T-statistic: A metric used to calculate the p-value for the slope coefficient of simple LR trends for \n' +
+              '• T-statistic: A metric used to calculate the p-value for the slope coefficient of simple LR trends for \n' +
               'annual RAP time series. Selecting the Tconf metric shows the p-value expressed as a confidence percentage. \n' +
               'In this case, the confidence represents the likelihood that the slope is non-zero (two-tailed). \n'
 
