@@ -1257,7 +1257,7 @@ main_panel.add(inspect_checkbox);
 
 var info_strA =
               'This app is built using the Google Earth Engine cloud platform and publically available datasets. \n' +
-              'The Rangeland Assessment Platform (RAP) dataset of ground cover is visualized for a southwestern US  \n' +
+              'The Rangeland Analysis Platform (RAP) dataset of ground cover is visualized for a southwestern US  \n' +
               'coverage area, and connections are identified between RAP and climate variables of the PRISM dataset. \n' +
               'Maps are generated at the ~800 m resolution of PRISM, such that RAP is spatially averaged from its \n' +
               'original resolution of 30 m. The sensitivity of RAP to climate is quantified based on the success of \n' +
@@ -1268,7 +1268,7 @@ var info_strA =
               'sensitivity on rangeland in the southwestern US. \n'
 
 var info_strB = 
-              '• RAP: Rangeland Assessment Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
+              '• RAP: Rangeland Analysis Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
               '• PRISM: A US gridded observational climate dataset. In this case, monthly ~800 m data is annually averaged. \n' +               
               '• Ground Cover: The fraction of surface area covered by plants or other cover forms when viewed from above. \n' +
               '• NPP: Net primary production, units of pounds carbon per acre (lbs / acre). \n' + 
@@ -1401,7 +1401,7 @@ ui.root.add(main_panel);
 var intro_strA = 
               'Explore site-specific connections between annual records of climate and vegetation cover \n' + 
               'given by two datasets: PRISM (Parameter-elevation Regressions on Independent Slopes Model) \n' +
-              'and RAP (Rangeland Assessment Platform). Map layers are produced at ~800 m resolution \n' +
+              'and RAP (Rangeland Analysis Platform). Map layers are produced at ~800 m resolution \n' +
               'and include statistical model results for each separate RAP variable and grid cell. \n' +
                '\n' +
               'Main features: \n' + 
