@@ -1,11 +1,11 @@
-
-//TO DO:
-//How to get rid of unused UI tools that automatically appear (e.g. polygon drawer)?
-
 var prism_ic = ee.ImageCollection('projects/sat-io/open-datasets/OREGONSTATE/PRISM_800_MONTHLY');
 var first_im = prism_ic.first().select('ppt');
 var scale = first_im.projection().nominalScale().getInfo();
 var area_shp = ee.Geometry.Rectangle([-121, 30, -102, 43], 'EPSG:4326', false);
+
+var mainMap = ui.Map();
+mainMap.setCenter(-109, 37, 5);  // instead of Map.setCenter
+mainMap.addLayer(area_shp);      // instead of Map.addLayer
 
 var years_list = ee.List.sequence(1986, 2024);
 var yr_idx_list = ee.List.sequence(0, years_list.length().subtract(1));
@@ -522,10 +522,10 @@ var introcheckStyle = {
   fontWeight:'bold'};
 
 var mainPanelStyle = {
-  position:'top-right',
-  padding:'0px 0px', 
+  position:'bottom-left', 
+  padding: '8px',
   backgroundColor:'rgba(255, 255, 255, 0.7)', 
-  border:'1px solid black'};
+  border:'0px solid black'};
 
 var headerStyle = {
   padding:'0px 0px',
@@ -560,7 +560,7 @@ var hdrLabelStyle = {
   padding:'0px 0px',
   margin:'2px',
   textAlign:'left',
-  fontSize:'12px',
+  fontSize:'18px',
   fontWeight:'bold'
 };
 
@@ -570,7 +570,7 @@ var introhdrLabelStyle = {
   padding:'0px 0px',
   margin:'2px',
   textAlign:'left',
-  fontSize:'16px',
+  fontSize:'20px',
   fontWeight:'bold'
 };
 
@@ -580,7 +580,7 @@ var infoLabelStyle = {
   padding:'1px',
   margin:'2px',
   textAlign:'left',
-  fontSize:'12px'};
+  fontSize:'14px'};
 
 var introLabelStyle = {
   position:'bottom-center',
@@ -592,10 +592,11 @@ var introLabelStyle = {
 
 var textPanelStyle = {
   height:'500px',
-  width:'700px',
+  width:'790px',
   position:'bottom-center', 
   stretch:'vertical',
-  margin:'10px 10px',
+  margin:'10px 10px 200px 10px',
+  padding:'50px',
   border:'1px solid black'};
 
 var introPanelStyle = {
@@ -603,7 +604,7 @@ var introPanelStyle = {
   width:'650px',
   position:'top-center', 
   stretch:'vertical',
-  margin:'10px 10px',
+  margin:'200px 10px 0px 10px',
   border:'1px solid black'
 };
 
@@ -661,9 +662,9 @@ biocoeff_map[coeff_list[13]] = {min:-1000, max:1000};
 /////////////////////////////////////////
 //Global Widget Vars and Initial Display
 
-Map.setCenter(-109, 37, 5);
+mainMap.setCenter(-109, 37, 5);
 
-Map.addLayer(area_shp);
+mainMap.addLayer(area_shp);
 
 var im_to_show = null;
 var bandVis = covVis;
@@ -673,8 +674,8 @@ var main_panel = ui.Panel({
   style:mainPanelStyle
 });
 
-main_panel.add(ui.Label({value:'Southwestern U.S.', style:{padding:'0px 0px', fontWeight:'bold'}}));
-main_panel.add(ui.Label({value:'RAP Climate Sensitivity Viewer', style:{padding:'0px 0px', fontWeight:'bold'}}));
+main_panel.add(ui.Label({value:'Southwestern U.S.', style:{padding:'0px 0px', fontWeight:'bold',fontSize:'20px',margin:'0px 0px -5px 0px'}}));
+main_panel.add(ui.Label({value:'RAP Climate Sensitivity Viewer', style:{padding:'0px 0px', fontWeight:'bold',fontSize:'20px',margin:'0px 0px 0px 0px'}}));
 
 var intro_panel = ui.Panel({
   layout:ui.Panel.Layout.flow('vertical'),
@@ -694,7 +695,7 @@ var pixel_panel = ui.Panel({style:pixelPanelStyle});
 
 function makeLegend(){
 
-  Map.remove(legend_panel);
+  mainMap.remove(legend_panel);
   legend_panel.clear();
   
   if (type_selection == 'Fconf' || type_selection == 'Tconf'){
@@ -793,14 +794,14 @@ function makeLegend(){
     legend_panel.add(panel2);
   }
 
-  Map.add(legend_panel);
+  mainMap.add(legend_panel);
 }
 
 //////////////////////
 //Select RAP Variable
 
 function renderVariable(var_selection){
-  Map.layers().reset();
+  mainMap.layers().reset();
   var var_i = cover_labels.concat(prod_labels).concat(bio_labels).indexOf(var_selection);
   var var_selection = cover_bands.concat(prod_bands).concat(bio_bands)[var_i];
   band_selection = var_selection;
@@ -884,7 +885,7 @@ function renderVariable(var_selection){
     var palettes = require('users/gena/packages:palettes');
     bandVis = {min:im_min, max:im_max, palette:palettes.colorbrewer.BrBG[7]};
   }
-  Map.addLayer(im_to_show, bandVis);
+  mainMap.addLayer(im_to_show, bandVis);
   makeLegend();
 }
 
@@ -902,10 +903,10 @@ main_panel.add(variable_dropdown);
 //Select Climate Model
 
 function renderModel(model_string){
-  Map.layers().reset();
+  mainMap.layers().reset();
   model_selection = model_string;
   im_to_show = main_fn(band_selection, ic_selection, type_selection);
-  Map.addLayer(im_to_show, bandVis);
+  mainMap.addLayer(im_to_show, bandVis);
   makeLegend();
 }
 
@@ -923,7 +924,7 @@ main_panel.add(model_dropdown);
 //Select Metric Layer
 
 function renderMetric(metric_selection){
-  Map.layers().reset();
+  mainMap.layers().reset();
   type_selection = metric_selection;
   im_to_show = main_fn(band_selection, ic_selection, type_selection);
 
@@ -954,7 +955,7 @@ function renderMetric(metric_selection){
   }else if (type_selection == 'Tconf'){
     bandVis = confVis;
   }
-  Map.addLayer(im_to_show, bandVis);
+  mainMap.addLayer(im_to_show, bandVis);
   makeLegend();
 }
 
@@ -972,7 +973,7 @@ main_panel.add(metric_dropdown);
 //Select Coefficient Layer
 
 function renderCoeff(coeff_str){
-  Map.layers().reset();
+  mainMap.layers().reset();
   type_selection = 'coeff'.concat(coeff_str);
   if (cover_bands.indexOf(band_selection) >= 0){
     var coeff_map = covcoeff_map;
@@ -991,7 +992,7 @@ function renderCoeff(coeff_str){
   var im_min = coeff_map[coeff_str]['min'];
   bandVis = {min:im_min, max:im_max, palette:palettes.colorbrewer.BrBG[7]};
   im_to_show = main_fn(band_selection, ic_selection, type_selection);
-  Map.addLayer(im_to_show, bandVis);
+  mainMap.addLayer(im_to_show, bandVis);
   makeLegend();
 }
 
@@ -1009,7 +1010,7 @@ main_panel.add(coeff_dropdown);
 //Select RAP Layer
 
 function renderYearA(year_selection){
-  Map.layers().reset();
+  mainMap.layers().reset();
   if (cover_bands.indexOf(band_selection) != -1){
     type_selection = 'cov'.concat(year_selection);
   }else if (prod_bands.indexOf(band_selection) != -1){
@@ -1025,7 +1026,7 @@ function renderYearA(year_selection){
   }else if (type_selection.slice(0, 3) == 'agb'){
     bandVis = bioVis;
   }
-  Map.addLayer(im_to_show, bandVis);
+  mainMap.addLayer(im_to_show, bandVis);
   makeLegend();
 }
 
@@ -1043,7 +1044,7 @@ main_panel.add(year_dropdownA);
 //Select Predicted Layer
 
 function renderYearB(year_selection){
-  Map.layers().reset();
+  mainMap.layers().reset();
   if (cover_bands.indexOf(band_selection) != -1){
     type_selection = 'covpred'.concat(year_selection);
   }else if (prod_bands.indexOf(band_selection) != -1){
@@ -1059,7 +1060,7 @@ function renderYearB(year_selection){
   }else if (type_selection.slice(0, 7) == 'agbpred'){
     bandVis = bioVis;
   }
-  Map.addLayer(im_to_show, bandVis);
+  mainMap.addLayer(im_to_show, bandVis);
   makeLegend();
 }
 
@@ -1108,7 +1109,7 @@ function makePlotA(plot_ic, point_geo){
 }
 
 function clickCallbackA(clickInfo_obj){
-  Map.remove(chart_panelA);
+  mainMap.remove(chart_panelA);
   var lat = clickInfo_obj.lat;
   var lon = clickInfo_obj.lon;
   var pt = ee.Geometry.Point([lon, lat]);
@@ -1118,16 +1119,16 @@ function clickCallbackA(clickInfo_obj){
     widgets:chart_widget,
     layout:ui.Panel.Layout.Flow('horizontal')
   });
-  Map.add(chart_panelA);
+  mainMap.add(chart_panelA);
 }
 
 function renderOnetoOne(checkbox_bool){
   if (checkbox_bool === true){
-    Map.onClick(clickCallbackA);
+    mainMap.onClick(clickCallbackA);
   }
   else{
-    Map.unlisten();
-    Map.remove(chart_panelA);
+    mainMap.unlisten();
+    mainMap.remove(chart_panelA);
     chart_panelA = ui.Panel({style:chartPanelStyle});
   }
 }
@@ -1170,7 +1171,7 @@ function makePlotB(rap_ic, point_geo){
 }
 
 function clickCallbackB(clickInfo_obj){
-  Map.remove(chart_panelB);
+  mainMap.remove(chart_panelB);
   var lat = clickInfo_obj.lat;
   var lon = clickInfo_obj.lon;
   var pt = ee.Geometry.Point([lon, lat]);
@@ -1180,16 +1181,16 @@ function clickCallbackB(clickInfo_obj){
     widgets:chart_widget,
     layout:ui.Panel.Layout.Flow('horizontal')
   });
-  Map.add(chart_panelB);
+  mainMap.add(chart_panelB);
 }
 
 function renderTrend(checkbox_bool){
   if (checkbox_bool === true){
-    Map.onClick(clickCallbackB);
+    mainMap.onClick(clickCallbackB);
   }
   else{
-    Map.unlisten();
-    Map.remove(chart_panelB);
+    mainMap.unlisten();
+    mainMap.remove(chart_panelB);
     chart_panelB = ui.Panel({style:chartPanelStyle});
   }
 }
@@ -1220,7 +1221,7 @@ function makePlotC(point_geo){
 }
 
 function clickCallbackC(clickInfo_obj){
-  Map.remove(pixel_panel);
+  mainMap.remove(pixel_panel);
   var lat = clickInfo_obj.lat;
   var lon = clickInfo_obj.lon;
   var pt = ee.Geometry.Point([lon, lat]);
@@ -1230,16 +1231,16 @@ function clickCallbackC(clickInfo_obj){
     layout:ui.Panel.Layout.Flow('horizontal'),
     style:pixelPanelStyle
   });
-  Map.add(pixel_panel);
+  mainMap.add(pixel_panel);
 }
 
 function renderInspector(checkbox_bool){
   if (checkbox_bool === true){
-    Map.onClick(clickCallbackC);
+    mainMap.onClick(clickCallbackC);
   }
   else{
-    Map.unlisten();
-    Map.remove(pixel_panel);
+    mainMap.unlisten();
+    mainMap.remove(pixel_panel);
     pixel_panel = ui.Panel({style:pixelPanelStyle});
   }
 }
@@ -1268,7 +1269,7 @@ var info_strA =
               'sensitivity on rangeland in the southwestern US. \n'
 
 var info_strB = 
-              '• RAP: Rangeland Analysis Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
+              '• RAP: Rangeland Assessment Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
               '• PRISM: A US gridded observational climate dataset. In this case, monthly ~800 m data is annually averaged. \n' +               
               '• Ground Cover: The fraction of surface area covered by plants or other cover forms when viewed from above. \n' +
               '• NPP: Net primary production, units of pounds carbon per acre (lbs / acre). \n' + 
@@ -1358,42 +1359,69 @@ var txtE = ui.Label({value:info_strE, style:infoLabelStyle});
 var hdrF = ui.Label({value:'ADDITIONAL NOTES', style:hdrLabelStyle});
 var txtF = ui.Label({value:info_strF, style:infoLabelStyle});
 
-var text_panel = ui.Panel({widgets:null, layout:null, style:textPanelStyle});
+// … [all your code above remains unchanged] …
 
-function render_infobox(bool_obj){
-  if (bool_obj === true){
-    text_panel.add(hdrA);
-    text_panel.add(txtA);
-    text_panel.add(hdrB);
-    text_panel.add(txtB);
-    text_panel.add(hdrC);
-    text_panel.add(txtC);
-    text_panel.add(hdrD);
-    text_panel.add(txtD);
-    text_panel.add(hdrE);
-    text_panel.add(txtE);
-    text_panel.add(hdrF);
-    text_panel.add(txtF);
-    Map.add(text_panel);
-  }else{
-    Map.remove(text_panel);
-    text_panel.clear();
-  }
-}
-
-var info_checkbox = ui.Checkbox({
-  label:'Show ReadMe',
-  onChange:render_infobox,
-  style:checkStyle
+var text_panel = ui.Panel({
+    widgets: null,
+    layout: null,
+    style: textPanelStyle
 });
 
+function render_infobox(bool_obj) {
+    if (bool_obj === true) {
+        text_panel.add(hdrA);
+        text_panel.add(txtA);
+        text_panel.add(hdrB);
+        text_panel.add(txtB);
+        text_panel.add(hdrC);
+        text_panel.add(txtC);
+        text_panel.add(hdrD);
+        text_panel.add(txtD);
+        text_panel.add(hdrE);
+        text_panel.add(txtE);
+        text_panel.add(hdrF);
+        text_panel.add(txtF);
+        mainMap.add(text_panel);
+    } else {
+        mainMap.remove(text_panel);
+        text_panel.clear();
+    }
+}
+// Add the "Show ReadMe" checkbox at the end of the main panel
+var info_checkbox = ui.Checkbox({
+    label: 'Show ReadMe',
+    onChange: render_infobox,
+    style: checkStyle
+});
 main_panel.add(info_checkbox);
 
-ui.root.add(main_panel);
+// === NEW STRUCTURED LAYOUT ===
 
-//Transparent panel styles only work with Map.add
-//Scroll bars only work with ui.root.add(main_panel);
-//Map.add(main_panel);
+// Left column = main_panel
+var controlPanel = ui.Panel({
+  widgets: [main_panel],
+  style: {width: '330px', padding: '8px'}
+});
+
+// Right column = the main Map
+var mapPanel = ui.Panel({
+  widgets: [mainMap],   // use the ui.Map() widget
+  style: {stretch: 'both'}
+});
+
+// Master layout: side-by-side
+var masterPanel = ui.Panel({
+  widgets: [controlPanel, mapPanel],
+  layout: ui.Panel.Layout.flow('horizontal'),
+  style: {stretch: 'both'}
+});
+
+// Clear and rebuild the root layout
+ui.root.clear();
+ui.root.setLayout(ui.Panel.Layout.absolute());
+ui.root.add(masterPanel);
+
+
 
 ///////////////////
 //Render intro box
@@ -1401,7 +1429,7 @@ ui.root.add(main_panel);
 var intro_strA = 
               'Explore site-specific connections between annual records of climate and vegetation cover \n' + 
               'given by two datasets: PRISM (Parameter-elevation Regressions on Independent Slopes Model) \n' +
-              'and RAP (Rangeland Analysis Platform). Map layers are produced at ~800 m resolution \n' +
+              'and RAP (Rangeland Assessment Platform). Map layers are produced at ~800 m resolution \n' +
               'and include statistical model results for each separate RAP variable and grid cell. \n' +
                '\n' +
               'Main features: \n' + 
@@ -1420,18 +1448,22 @@ intro_panel.add(hdA);
 intro_panel.add(txA);
 
 function render_introbox(bool_obj){
-  if (bool_obj === true){
-    Map.remove(intro_panel);
-    intro_panel.clear();
-  }
+    mainMap.remove(intro_panel);
 }
 
-var intro_checkbox = ui.Checkbox({
-  label:'CLICK TO CLOSE',
-  onChange:render_introbox,
+var intro_checkbox = ui.Button({
+  label:'CLOSE',
+  onClick:render_introbox,
   style:introcheckStyle
 });
 
 intro_panel.add(intro_checkbox);
 
-Map.add(intro_panel);
+mainMap.add(intro_panel);
+
+//////////////////////////////////////////
+// Hide and disable the drawing tools (top-left toolbar)
+var dt = mainMap.drawingTools();
+dt.setShown(false);     // hides the toolbar
+dt.setDrawModes([]);    // disables all draw modes (extra safety)
+dt.layers().reset();    // removes the default "geometry" layer, if present
