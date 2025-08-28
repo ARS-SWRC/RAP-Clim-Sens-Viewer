@@ -1269,7 +1269,7 @@ var info_strA =
               'sensitivity on rangeland in the southwestern US. \n'
 
 var info_strB = 
-              '• RAP: Rangeland Assessment Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
+              '• RAP: Rangeland Analysis Platform is a dataset with rangeland-specific vegetation growth and cover. \n' + 
               '• PRISM: A US gridded observational climate dataset. In this case, monthly ~800 m data is annually averaged. \n' +               
               '• Ground Cover: The fraction of surface area covered by plants or other cover forms when viewed from above. \n' +
               '• NPP: Net primary production, units of pounds carbon per acre (lbs / acre). \n' + 
@@ -1340,7 +1340,7 @@ var info_strE =
               'western United States. Rangeland Ecology & Management, 87, 1-12. \n'
 
 var info_strF = 
-              'The official Rangeland Assessment Platform website is found at https://rangelands.app \n' + 
+              'The official Rangeland Analysis Platform website is found at https://rangelands.app \n' + 
               'The PRISM dataset used is available from https://support.climateengine.org/article/80-prism \n' +
               'The code for this application can be found at www.github.com/ARS-SWRC/RAP-Clim-Sens-Viewer \n' +
               'This app is developed by Andrew Fullhart and Gerardo Armendariz (U of Arizona SNRE, USDA-ARS-SWRC).';
@@ -1429,7 +1429,7 @@ ui.root.add(masterPanel);
 var intro_strA = 
               'Explore site-specific connections between annual records of climate and vegetation cover \n' + 
               'given by two datasets: PRISM (Parameter-elevation Regressions on Independent Slopes Model) \n' +
-              'and RAP (Rangeland Assessment Platform). Map layers are produced at ~800 m resolution \n' +
+              'and RAP (Rangeland Analysis Platform). Map layers are produced at ~800 m resolution \n' +
               'and include statistical model results for each separate RAP variable and grid cell. \n' +
                '\n' +
               'Main features: \n' + 
