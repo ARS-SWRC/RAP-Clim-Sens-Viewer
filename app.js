@@ -1124,9 +1124,11 @@ function clickCallbackA(clickInfo_obj){
 
 function renderOnetoOne(checkbox_bool){
   if (checkbox_bool === true){
+    mainMap.style().set('cursor', 'crosshair'); 
     mainMap.onClick(clickCallbackA);
   }
   else{
+    mainMap.style().set('cursor', 'hand'); 
     mainMap.unlisten();
     mainMap.remove(chart_panelA);
     chart_panelA = ui.Panel({style:chartPanelStyle});
@@ -1186,9 +1188,11 @@ function clickCallbackB(clickInfo_obj){
 
 function renderTrend(checkbox_bool){
   if (checkbox_bool === true){
+    mainMap.style().set('cursor', 'crosshair'); 
     mainMap.onClick(clickCallbackB);
   }
   else{
+    mainMap.style().set('cursor', 'hand'); 
     mainMap.unlisten();
     mainMap.remove(chart_panelB);
     chart_panelB = ui.Panel({style:chartPanelStyle});
@@ -1235,10 +1239,13 @@ function clickCallbackC(clickInfo_obj){
 }
 
 function renderInspector(checkbox_bool){
+  
   if (checkbox_bool === true){
+    mainMap.style().set('cursor', 'crosshair'); 
     mainMap.onClick(clickCallbackC);
   }
   else{
+    mainMap.style().set('cursor', 'hand'); 
     mainMap.unlisten();
     mainMap.remove(pixel_panel);
     pixel_panel = ui.Panel({style:pixelPanelStyle});
